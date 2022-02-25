@@ -6,6 +6,7 @@ import subprocess
 import multiprocessing
 import math
 import base64
+import hashlib
 
 def gen_OWNERID():
     ac = int(input("Access code > "))
@@ -13,7 +14,12 @@ def gen_OWNERID():
     y = multiprocessing.cpu_count() / 16 
     a = multiprocessing.cpu_count() * 2487^ ac
     z = ((x + y) * 6276 / (9580 ^ a)) * (x + y + a)
-    return math.trunc(z * (int(x + y * a) ^ 4953) + ac)
+    tot = math.trunc(z * (int(x + y * a) ^ 4953) + ac)
+
+    hash = hashlib.sha256()
+    hash.update(str(tot).encode("ascii"))
+
+    return hash.hexdigest()
 
 tmp_file = tempfile.gettempdir()
 
